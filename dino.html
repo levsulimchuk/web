@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dino Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+
+    <script>
+        var canvas = document.getElementById("gameCanvas");
+        var ctx = canvas.getContext("2d");
+
+        var dino = {
+            x: 50,
+            y: canvas.height - 40,
+            width: 30,
+            height: 40,
+            speed: 5,
+            jumpPower: 15,
+            jumping: false,
+            yVelocity: 0
+        };
+
+        function drawDino() {
+            ctx.fillStyle = "green";
+            ctx.fillRect(dino.x, dino.y - dino.height, dino.width, dino.height);
+        }
+
+        function updateDino() {
+            if (dino.jumping) {
+                dino.yVelocity += 0.5; // Gravity
+                dino.y += dino.yVelocity;
+                if (dino.y >= canvas.height - 40) { // On ground
+                    dino.y = canvas.height - 40;
+                    dino.yVelocity = 0;
+                    dino.jumping = false;
+                }
+            }
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function update() {
+            clearCanvas();
+            drawDino();
+            updateDino();
+        }
+
+        setInterval(update, 1000/60); // Update every 1/60th of a second
+
+        document.addEventListener("keydown", function(event) {
+            switch(event.key) {
+                case "a":
+                    dino.x -= dino.speed;
+                    break;
+                case "d":
+                    dino.x += dino.speed;
+                    break;
+                case "w":
+                    if (!dino.jumping) {
+                        dino.jumping = true;
+                        dino.yVelocity = -dino.jumpPower;
+                    }
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>
